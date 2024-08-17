@@ -1,0 +1,38 @@
+[
+    {
+        "id": 1,
+        "nombre": "Juan Pérez",
+        "direccion": "Calle Falsa 123",
+        "zona": "Norte",
+        "pedido": {
+            "cantidad": 2,
+            "producto": "Agua"
+        },
+        "diaRecorrido": "Lunes",
+        "observacion": "Cliente puntual, paga en efectivo."
+    },
+    {
+        "id": 2,
+        "nombre": "María López",
+        "direccion": "Av. Siempre Viva 742",
+        "zona": "Sur",
+        "pedido": {
+            "cantidad": 1,
+            "producto": "Soda"
+        },
+        "diaRecorrido": "Miércoles",
+        "observacion": "Solicita entrega antes de las 10 AM."
+    },
+    {
+        "id": 3,
+        "nombre": "Carlos García",
+        "direccion": "Calle Mayor 456",
+        "zona": "Este",
+        "pedido": {
+            "cantidad": 3,
+            "producto": "Agua"
+        },
+        "diaRecorrido": "Viernes",
+        "observacion": "Prefiere transferencia bancaria."
+    }
+]
