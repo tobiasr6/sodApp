@@ -2,5 +2,9 @@
     {
         "alias": "tobi",
         "password": "1234"
+    },
+    {
+        "alias":"pauli",
+        "password":"1234"
     }
 ]
