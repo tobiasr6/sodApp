@@ -18,16 +18,18 @@ const Login = () => {
 
     const onFinish = (values) => {
         setLoading(true);
+
+        // Buscar coincidencia en los usuarios
         const user = users.find(u => u.alias === values.username && u.password === values.password);
 
         if (user) {
-            // Si las credenciales coinciden, mostrar notificación de éxito
+            // Si las credenciales coinciden
             openNotificationWithIcon('success', 'Inicio de sesión exitoso');
             localStorage.setItem('token', 'your-jwt-token'); // Simulación de token
             localStorage.setItem('user', user.alias);
             navigate('/entregas');
         } else {
-            // Si las credenciales no coinciden, mostrar notificación de error
+            // Si las credenciales no coinciden
             openNotificationWithIcon('error', 'Credenciales incorrectas');
             setLoading(false);
         }
