@@ -1,14 +1,16 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useContext } from 'react';
 import { Table, Select, Space, Typography, Button, Card, Row, Col, Statistic, Modal, Form, InputNumber } from 'antd';
 import { CaretDownOutlined, DropboxOutlined, PlusOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import 'moment/locale/es';
-import clientes from '../../data/clientes/clientes.json';
+// import clientes from '../../data/clientes/clientes.json';
+import { ClientesContext } from '../../components/context/ClientesContext'
+
 
 const { Option } = Select;
 const { Title } = Typography;
 
-moment.locale('es');  // Configura moment para usar el idioma español
+moment.locale('es');
 
 const translateDay = (day) => {
     const daysInSpanish = {
@@ -24,23 +26,28 @@ const translateDay = (day) => {
 };
 
 const Entregas = () => {
+    const { clientes } = useContext(ClientesContext);
     const [filters, setFilters] = useState({
         zona: '',
         estado: '',
-        dia: translateDay(moment().format('dddd')),  // Obtiene el día de la semana en español
+        dia: translateDay(moment().format('dddd')),
     });
 
-    const [entregas, setEntregas] = useState(clientes.map(cliente => ({
-        id: cliente.id,
-        cantidad: cliente.pedido.cantidad,
-        producto: cliente.pedido.producto,
-        zona: cliente.zona,
-        cliente: cliente.nombre,
-        direccion: cliente.direccion,
-        observacion: cliente.observacion,
-        estado: 'pendiente',
-        diaRecorrido: cliente.diaRecorrido,
-    })));
+    const [entregas, setEntregas] = useState(clientes.flatMap(cliente => 
+        cliente.pedidos.map(pedido => 
+            cliente.diasRecorrido.map(diaRecorrido => ({
+                id: `${cliente.id}-${pedido.producto}-${diaRecorrido.dia}`, // Genera un ID único combinando los datos
+                cantidad: pedido.cantidad,
+                producto: pedido.producto,
+                zona: cliente.zona,
+                cliente: cliente.nombre,
+                direccion: cliente.direccion,
+                observacion: cliente.observacion,
+                estado: 'pendiente',
+                diaRecorrido: diaRecorrido.dia,
+            }))
+        ).flat()
+    ));
 
     const applyFilters = () => {
         return entregas.filter(entrega => {
@@ -62,13 +69,12 @@ const Entregas = () => {
         setFilters({
             zona: '',
             estado: '',
-            dia: translateDay(moment().format('dddd'))  // Restablecer el día en español
+            dia: translateDay(moment().format('dddd'))
         });
     };
 
     const filteredEntregas = useMemo(() => applyFilters(), [filters, entregas]);
 
-    // Calcular el total de productos a cargar, distinguiendo entre agua y soda
     const calcularTotales = (entregas) => {
         let totalAgua = 0;
         let totalSoda = 0;
@@ -86,17 +92,16 @@ const Entregas = () => {
 
     const { totalAgua, totalSoda } = useMemo(() => calcularTotales(filteredEntregas), [filteredEntregas]);
 
-    // Función para obtener el color según el estado
     const getEstadoColor = (estado) => {
         switch (estado) {
             case 'entregada':
-                return '#4CAF50';  // Un verde más oscuro
+                return '#4CAF50';
             case 'no recibida':
-                return '#F44336';  // Un rojo más oscuro
+                return '#F44336';
             case 'pendiente':
-                return '#FF9800';  // Un naranja más oscuro
+                return '#FF9800';
             default:
-                return '#9E9E9E';  // Gris por defecto
+                return '#9E9E9E';
         }
     };
 
@@ -139,10 +144,7 @@ const Entregas = () => {
                 <Select
                     value={record.estado}
                     onChange={value => handleEstadoChange(record.id, value)}
-                    style={{ 
-                        width: 150,
-                        backgroundColor: 'white'
-                    }}
+                    style={{ width: 150, backgroundColor: 'white' }}
                     dropdownStyle={{ backgroundColor: 'white' }}
                     suffixIcon={
                         <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -190,7 +192,7 @@ const Entregas = () => {
         form.validateFields().then(values => {
             const cliente = clientes.find(c => c.id === values.clienteId);
             const nuevaEntrega = {
-                id: Date.now(), // Generamos un ID único
+                id: Date.now(),
                 cantidad: values.cantidad,
                 producto: values.producto,
                 zona: cliente.zona,
@@ -262,7 +264,7 @@ const Entregas = () => {
                     >
                         <Option value="">Todos los estados</Option>
                         <Option value="entregada">Entregada</Option>
-                        <Option value="no recibida">No recibida</Option>
+                        <Option value="no recibida">No Recibida</Option>
                         <Option value="pendiente">Pendiente</Option>
                     </Select>
                     <Select
@@ -288,7 +290,7 @@ const Entregas = () => {
                 onClick={showModal}
                 style={{ marginBottom: 16, marginLeft: 16 }}
             >
-                Agregar entrega. 
+                Agregar entrega
             </Button>
             <Table columns={columns} dataSource={filteredEntregas} rowKey="id" />
 

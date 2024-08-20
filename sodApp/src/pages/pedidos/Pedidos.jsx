@@ -1,31 +1,38 @@
-import { useState } from 'react';
+import { useState, useContext  } from 'react';
 import { Table, Select, Space, Typography, Button, Card, Row, Col, Statistic } from 'antd';
 import { ShoppingCartOutlined, ShoppingOutlined } from '@ant-design/icons';
-import clientes from '../../data/clientes/clientes.json';
+import { ClientesContext } from '../../components/context/ClientesContext'
+// import clientes from '../../data/clientes/clientes.json';
 
 const { Option } = Select;
 const { Title } = Typography;
 
 const Pedidos = () => {
+    const { clientes } = useContext(ClientesContext);
     const [filters, setFilters] = useState({
         zona: '',
-        producto: ''
+        producto: '',
+        dia: ''
     });
 
     // Genera los pedidos en base a los clientes importados
-    const pedidos = clientes.map((cliente) => ({
-        id: cliente.id,
-        cantidad: cliente.pedido.cantidad,
-        producto: cliente.pedido.producto,
-        zona: cliente.zona,
-        cliente: cliente.nombre,
-    }));
+    const pedidos = clientes.flatMap((cliente) => 
+        cliente.pedidos.map((pedido) => ({
+            id: cliente.id,
+            cantidad: pedido.cantidad,
+            producto: pedido.producto,
+            zona: cliente.zona,
+            cliente: cliente.nombre,
+            diasRecorrido: cliente.diasRecorrido.map((dia) => dia.dia)
+        }))
+    );
 
     const applyFilters = () => {
         return pedidos.filter(pedido => {
             const matchesZona = filters.zona ? pedido.zona === filters.zona : true;
             const matchesProducto = filters.producto ? pedido.producto.toLowerCase() === filters.producto.toLowerCase() : true;
-            return matchesZona && matchesProducto;
+            const matchesDia = filters.dia ? pedido.diasRecorrido.includes(filters.dia) : true;
+            return matchesZona && matchesProducto && matchesDia;
         });
     };
 
@@ -39,7 +46,8 @@ const Pedidos = () => {
     const handleClearFilters = () => {
         setFilters({
             zona: '',
-            producto: ''
+            producto: '',
+            dia: ''
         });
     };
 
@@ -69,6 +77,12 @@ const Pedidos = () => {
             title: 'Nombre del Cliente',
             dataIndex: 'cliente',
             key: 'cliente',
+        },
+        {
+            title: 'Días de Recorrido',
+            dataIndex: 'diasRecorrido',
+            key: 'diasRecorrido',
+            render: diasRecorrido => diasRecorrido.join(', '),
         },
     ];
 
@@ -128,6 +142,19 @@ const Pedidos = () => {
                         <Option value="">Todos los productos</Option>
                         <Option value="agua">Agua</Option>
                         <Option value="soda">Soda</Option>
+                    </Select>
+                    <Select
+                        placeholder="Filtrar por día"
+                        onChange={value => handleFilterChange(value, 'dia')}
+                        value={filters.dia}
+                        style={{ width: 200 }}
+                    >
+                        <Option value="">Todos los días</Option>
+                        <Option value="Lunes">Lunes</Option>
+                        <Option value="Martes">Martes</Option>
+                        <Option value="Miércoles">Miércoles</Option>
+                        <Option value="Jueves">Jueves</Option>
+                        <Option value="Viernes">Viernes</Option>
                     </Select>
                     <Button onClick={handleClearFilters} type="default">
                         Limpiar filtros

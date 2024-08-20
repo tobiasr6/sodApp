@@ -1,22 +1,21 @@
-import { useState, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Table, Select, InputNumber, Button, Modal, Form, Input, Space, notification } from 'antd';
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import clientesData from '../../data/clientes/clientes.json';
+import { ClientesContext } from '../../components/context/ClientesContext';
 
 const { Option } = Select;
 
 const Clientes = () => {
-    const [clientes, setClientes] = useState([]);
-    const [filteredClientes, setFilteredClientes] = useState([]);
+    const { clientes, addCliente, updateCliente, deleteCliente } = useContext(ClientesContext);
+    const [filteredClientes, setFilteredClientes] = useState(clientes);
     const [filters, setFilters] = useState({ zona: '', producto: '', diaRecorrido: '' });
     const [editingClient, setEditingClient] = useState(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [form] = Form.useForm();
 
     useEffect(() => {
-        setClientes(clientesData);
-        setFilteredClientes(clientesData);
-    }, []);
+        applyFilters(filters, clientes);
+    }, [clientes]);
 
     const openNotificationWithIcon = (type, message) => {
         notification[type]({
@@ -38,27 +37,17 @@ const Clientes = () => {
     };
 
     const handleDeleteClient = (id) => {
-        const updatedClientes = clientes.filter(client => client.id !== id);
-        setClientes(updatedClientes);
-        applyFilters(filters, updatedClientes);
+        deleteCliente(id);
         openNotificationWithIcon('success', 'Cliente eliminado exitosamente');
     };
 
     const handleModalOk = () => {
         form.validateFields().then(values => {
             if (editingClient) {
-                const updatedClientes = clientes.map(client => client.id === editingClient.id ? { ...client, ...values } : client);
-                setClientes(updatedClientes);
-                applyFilters(filters, updatedClientes);
+                updateCliente(editingClient.id, values);
                 openNotificationWithIcon('success', 'Cliente editado exitosamente');
             } else {
-                const newClient = {
-                    ...values,
-                    id: clientes.length ? clientes[clientes.length - 1].id + 1 : 1
-                };
-                const updatedClientes = [...clientes, newClient];
-                setClientes(updatedClientes);
-                applyFilters(filters, updatedClientes);
+                addCliente(values);
                 openNotificationWithIcon('success', 'Cliente agregado exitosamente');
             }
             setIsModalVisible(false);
@@ -76,10 +65,10 @@ const Clientes = () => {
             filtered = filtered.filter(client => client.zona === filters.zona);
         }
         if (filters.producto) {
-            filtered = filtered.filter(client => client.pedido.producto === filters.producto);
+            filtered = filtered.filter(client => client.pedidos.some(pedido => pedido.producto === filters.producto));
         }
         if (filters.diaRecorrido) {
-            filtered = filtered.filter(client => client.diaRecorrido === filters.diaRecorrido);
+            filtered = filtered.filter(client => client.diasRecorrido.some(dia => dia.dia === filters.diaRecorrido));
         }
 
         setFilteredClientes(filtered);
@@ -111,25 +100,32 @@ const Clientes = () => {
             title: 'Zona',
             dataIndex: 'zona',
             key: 'zona',
-            render: (zona) => <span>{zona}</span>,
         },
         {
-            title: 'Pedido Habitual',
-            key: 'pedido',
+            title: 'Pedidos Habituales',
+            key: 'pedidos',
             render: (_, record) => (
                 <div>
-                    <InputNumber value={record.pedido.cantidad} style={{ marginRight: 8 }} readOnly />
-                    <Select value={record.pedido.producto} style={{ width: 120 }} disabled>
-                        <Option value="agua">Agua</Option>
-                        <Option value="soda">Soda</Option>
-                    </Select>
+                    {record.pedidos.map((pedido, index) => (
+                        <div key={index}>
+                            {pedido.cantidad} {pedido.producto}
+                        </div>
+                    ))}
                 </div>
             ),
         },
         {
-            title: 'Día Recorrido',
-            dataIndex: 'diaRecorrido',
-            key: 'diaRecorrido',
+            title: 'Días de Recorrido',
+            key: 'diasRecorrido',
+            render: (_, record) => (
+                <div>
+                    {record.diasRecorrido.map((dia, index) => (
+                        <div key={index}>
+                            {dia.dia}
+                        </div>
+                    ))}
+                </div>
+            ),
         },
         {
             title: 'Observación',
@@ -207,75 +203,105 @@ const Clientes = () => {
                 width={720}
             >
                 <Form form={form} layout="vertical">
-                    <Form.Item
-                        name="nombre"
-                        label="Nombre"
-                        rules={[{ required: true, message: 'Por favor ingresa el nombre del cliente!' }]}
-                    >
-                        <Input />
-                    </Form.Item>
-                    <Form.Item
-                        name="direccion"
-                        label="Dirección"
-                        rules={[{ required: true, message: 'Por favor ingresa la dirección!' }]}
-                    >
-                        <Input />
-                    </Form.Item>
-                    <Form.Item
-                        name="zona"
-                        label="Zona"
-                        rules={[{ required: true, message: 'Por favor selecciona una zona!' }]}
-                    >
-                        <Select>
-                            <Option value="Norte">Norte</Option>
-                            <Option value="Sur">Sur</Option>
-                            <Option value="Este">Este</Option>
-                            <Option value="Oeste">Oeste</Option>
-                        </Select>
-                    </Form.Item>
-                    <Form.Item
-                        name="pedido"
-                        label="Pedido Habitual"
-                        rules={[{ required: true, message: 'Por favor ingresa el pedido habitual!' }]}
-                    >
+    <Form.Item
+        name="nombre"
+        label="Nombre"
+        rules={[{ required: true, message: 'Por favor ingresa el nombre del cliente!' }]}
+    >
+        <Input />
+    </Form.Item>
+    <Form.Item
+        name="direccion"
+        label="Dirección"
+        rules={[{ required: true, message: 'Por favor ingresa la dirección!' }]}
+    >
+        <Input />
+    </Form.Item>
+    <Form.Item
+        name="zona"
+        label="Zona"
+        rules={[{ required: true, message: 'Por favor selecciona una zona!' }]}
+    >
+        <Select>
+            <Option value="Norte">Norte</Option>
+            <Option value="Sur">Sur</Option>
+            <Option value="Este">Este</Option>
+            <Option value="Oeste">Oeste</Option>
+        </Select>
+    </Form.Item>
+    <Form.List name="pedidos">
+        {(fields, { add, remove }) => (
+            <div>
+                {fields.map(({ key, name, fieldKey, ...restField }) => (
+                    <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
                         <Form.Item
-                            name={['pedido', 'cantidad']}
-                            noStyle
-                            rules={[{ required: true, message: 'Por favor ingresa la cantidad!' }]}
+                            {...restField}
+                            name={[name, 'cantidad']}
+                            fieldKey={[fieldKey, 'cantidad']}
+                            rules={[{ required: true, message: 'Ingresa la cantidad!' }]}
                         >
-                            <InputNumber min={1} style={{ width: '100px', marginRight: '8px' }} />
+                            <InputNumber min={1} placeholder="Cantidad" />
                         </Form.Item>
                         <Form.Item
-                            name={['pedido', 'producto']}
-                            noStyle
-                            rules={[{ required: true, message: 'Por favor selecciona un producto!' }]}
+                            {...restField}
+                            name={[name, 'producto']}
+                            fieldKey={[fieldKey, 'producto']}
+                            rules={[{ required: true, message: 'Selecciona un producto!' }]}
                         >
-                            <Select style={{ width: '120px' }}>
+                            <Select placeholder="Producto" style={{ width: 120 }}>
                                 <Option value="agua">Agua</Option>
                                 <Option value="soda">Soda</Option>
                             </Select>
                         </Form.Item>
-                    </Form.Item>
-                    <Form.Item
-                        name="diaRecorrido"
-                        label="Día de Recorrido"
-                        rules={[{ required: true, message: 'Por favor selecciona un día!' }]}
-                    >
-                        <Select>
-                            <Option value="Lunes">Lunes</Option>
-                            <Option value="Martes">Martes</Option>
-                            <Option value="Miércoles">Miércoles</Option>
-                            <Option value="Jueves">Jueves</Option>
-                            <Option value="Viernes">Viernes</Option>
-                        </Select>
-                    </Form.Item>
-                    <Form.Item
-                        name="observacion"
-                        label="Observación"
-                    >
-                        <Input />
-                    </Form.Item>
-                </Form>
+                        <Button onClick={() => remove(name)}>Eliminar</Button>
+                    </Space>
+                ))}
+                <Form.Item>
+                    <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                        Agregar Pedido
+                    </Button>
+                </Form.Item>
+            </div>
+        )}
+    </Form.List>
+    <Form.List name="diasRecorrido">
+        {(fields, { add, remove }) => (
+            <div>
+                {fields.map(({ key, name, fieldKey, ...restField }) => (
+                    <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
+                        <Form.Item
+                            {...restField}
+                            name={[name, 'dia']}
+                            fieldKey={[fieldKey, 'dia']}
+                            rules={[{ required: true, message: 'Selecciona un día!' }]}
+                        >
+                            <Select placeholder="Día de Recorrido" style={{ width: 120 }}>
+                                <Option value="Lunes">Lunes</Option>
+                                <Option value="Martes">Martes</Option>
+                                <Option value="Miércoles">Miércoles</Option>
+                                <Option value="Jueves">Jueves</Option>
+                                <Option value="Viernes">Viernes</Option>
+                            </Select>
+                        </Form.Item>
+                        <Button onClick={() => remove(name)}>Eliminar</Button>
+                    </Space>
+                ))}
+                <Form.Item>
+                    <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                        Agregar Día
+                    </Button>
+                </Form.Item>
+            </div>
+        )}
+    </Form.List>
+    <Form.Item
+        name="observacion"
+        label="Observación"
+    >
+        <Input />
+    </Form.Item>
+</Form>
+
             </Modal>
         </div>
     );
