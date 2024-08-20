@@ -318,8 +318,8 @@ const Entregas = () => {
                         rules={[{ required: true, message: 'Por favor seleccione un producto' }]}
                     >
                         <Select>
-                            <Option value="agua">Agua</Option>
-                            <Option value="soda">Soda</Option>
+                            <Option value="Agua">Agua</Option>
+                            <Option value="Soda">Soda</Option>
                         </Select>
                     </Form.Item>
                     <Form.Item

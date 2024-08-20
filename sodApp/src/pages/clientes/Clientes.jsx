@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Table, Select, InputNumber, Button, Modal, Form, Input, Space, notification } from 'antd';
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { ClientesContext } from '../../components/context/ClientesContext';
+import zonasData from '../../data/zonas/zonas.json';
 
 const { Option } = Select;
 
@@ -11,7 +12,20 @@ const Clientes = () => {
     const [filters, setFilters] = useState({ zona: '', producto: '', diaRecorrido: '' });
     const [editingClient, setEditingClient] = useState(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [zonas, setZonas] = useState({});
+    const [barrios, setBarrios] = useState([]);
+    const [selectedZona, setSelectedZona] = useState(null);
     const [form] = Form.useForm();
+
+    useEffect(() => {
+        setZonas(zonasData);
+    }, []);
+
+    const handleBarrioChange = (value) => {
+        const zona = Object.keys(zonas).find(zona => zonas[zona].includes(value));
+        setSelectedZona(zona);
+        form.setFieldsValue({ zona: zona });
+    };
 
     useEffect(() => {
         applyFilters(filters, clientes);
@@ -170,8 +184,8 @@ const Clientes = () => {
                         style={{ width: 200 }}
                     >
                         <Option value="">Todos</Option>
-                        <Option value="agua">Agua</Option>
-                        <Option value="soda">Soda</Option>
+                        <Option value="Agua">Agua</Option>
+                        <Option value="Soda">Soda</Option>
                     </Select>
                     <Select
                         placeholder="Filtrar por día"
@@ -203,105 +217,122 @@ const Clientes = () => {
                 width={720}
             >
                 <Form form={form} layout="vertical">
-    <Form.Item
-        name="nombre"
-        label="Nombre"
-        rules={[{ required: true, message: 'Por favor ingresa el nombre del cliente!' }]}
-    >
-        <Input />
-    </Form.Item>
-    <Form.Item
-        name="direccion"
-        label="Dirección"
-        rules={[{ required: true, message: 'Por favor ingresa la dirección!' }]}
-    >
-        <Input />
-    </Form.Item>
-    <Form.Item
-        name="zona"
-        label="Zona"
-        rules={[{ required: true, message: 'Por favor selecciona una zona!' }]}
-    >
-        <Select>
-            <Option value="Norte">Norte</Option>
-            <Option value="Sur">Sur</Option>
-            <Option value="Este">Este</Option>
-            <Option value="Oeste">Oeste</Option>
-        </Select>
-    </Form.Item>
-    <Form.List name="pedidos">
-        {(fields, { add, remove }) => (
-            <div>
-                {fields.map(({ key, name, fieldKey, ...restField }) => (
-                    <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-                        <Form.Item
-                            {...restField}
-                            name={[name, 'cantidad']}
-                            fieldKey={[fieldKey, 'cantidad']}
-                            rules={[{ required: true, message: 'Ingresa la cantidad!' }]}
-                        >
-                            <InputNumber min={1} placeholder="Cantidad" />
-                        </Form.Item>
-                        <Form.Item
-                            {...restField}
-                            name={[name, 'producto']}
-                            fieldKey={[fieldKey, 'producto']}
-                            rules={[{ required: true, message: 'Selecciona un producto!' }]}
-                        >
-                            <Select placeholder="Producto" style={{ width: 120 }}>
-                                <Option value="agua">Agua</Option>
-                                <Option value="soda">Soda</Option>
-                            </Select>
-                        </Form.Item>
-                        <Button onClick={() => remove(name)}>Eliminar</Button>
-                    </Space>
-                ))}
-                <Form.Item>
-                    <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                        Agregar Pedido
-                    </Button>
+                    <Form.Item
+                        name="nombre"
+                        label="Nombre"
+                        rules={[{ required: true, message: 'Por favor ingresa el nombre del cliente!' }]}
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item
+                    name="direccion"
+                    label="Dirección"
+                    rules={[{ required: true, message: 'Por favor ingresa la dirección!' }]}
+                >
+                    <Input />
                 </Form.Item>
-            </div>
-        )}
-    </Form.List>
-    <Form.List name="diasRecorrido">
-        {(fields, { add, remove }) => (
-            <div>
-                {fields.map(({ key, name, fieldKey, ...restField }) => (
-                    <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-                        <Form.Item
-                            {...restField}
-                            name={[name, 'dia']}
-                            fieldKey={[fieldKey, 'dia']}
-                            rules={[{ required: true, message: 'Selecciona un día!' }]}
-                        >
-                            <Select placeholder="Día de Recorrido" style={{ width: 120 }}>
-                                <Option value="Lunes">Lunes</Option>
-                                <Option value="Martes">Martes</Option>
-                                <Option value="Miércoles">Miércoles</Option>
-                                <Option value="Jueves">Jueves</Option>
-                                <Option value="Viernes">Viernes</Option>
-                            </Select>
-                        </Form.Item>
-                        <Button onClick={() => remove(name)}>Eliminar</Button>
-                    </Space>
-                ))}
-                <Form.Item>
-                    <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                        Agregar Día
-                    </Button>
-                </Form.Item>
-            </div>
-        )}
-    </Form.List>
-    <Form.Item
-        name="observacion"
-        label="Observación"
-    >
-        <Input />
-    </Form.Item>
-</Form>
 
+                <Form.Item
+                    name="barrio"
+                    label="Barrio"
+                    rules={[{ required: true, message: 'Por favor selecciona un barrio!' }]}
+                >
+                    <Select
+                        showSearch  // Habilita la búsqueda
+                        placeholder="Selecciona un barrio"
+                        onChange={handleBarrioChange}
+                        filterOption={(input, option) =>
+                            option.children.toLowerCase().includes(input.toLowerCase())
+                        }
+                    >
+                        {Object.keys(zonas).flatMap(zona =>
+                            zonas[zona].map(barrio => (
+                                <Option key={barrio} value={barrio}>
+                                    {barrio}
+                                </Option>
+                            ))
+                        )}
+                    </Select>
+                </Form.Item>
+
+                <Form.Item
+                    name="zona"
+                    label="Zona"
+                >
+                    <Input value={selectedZona} disabled />
+                </Form.Item>
+                    <Form.List name="pedidos">
+                        {(fields, { add, remove }) => (
+                            <div>
+                                {fields.map(({ key, name, fieldKey, ...restField }) => (
+                                    <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
+                                        <Form.Item
+                                            {...restField}
+                                            name={[name, 'cantidad']}
+                                            fieldKey={[fieldKey, 'cantidad']}
+                                            rules={[{ required: true, message: 'Ingresa la cantidad!' }]}
+                                        >
+                                            <InputNumber min={1} placeholder="Cantidad" />
+                                        </Form.Item>
+                                        <Form.Item
+                                            {...restField}
+                                            name={[name, 'producto']}
+                                            fieldKey={[fieldKey, 'producto']}
+                                            rules={[{ required: true, message: 'Selecciona un producto!' }]}
+                                        >
+                                            <Select placeholder="Producto" style={{ width: 120 }}>
+                                                <Option value="Agua">Agua</Option>
+                                                <Option value="Soda">Soda</Option>
+                                            </Select>
+                                        </Form.Item>
+                                        <Button onClick={() => remove(name)}>Eliminar</Button>
+                                    </Space>
+                                ))}
+                                <Form.Item>
+                                    <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                        Agregar Pedido
+                                    </Button>
+                                </Form.Item>
+                            </div>
+                        )}
+                    </Form.List>
+                    <Form.List name="diasRecorrido">
+                        {(fields, { add, remove }) => (
+                            <div>
+                                {fields.map(({ key, name, fieldKey, ...restField }) => (
+                                    <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
+                                        <Form.Item
+                                            {...restField}
+                                            name={[name, 'dia']}
+                                            fieldKey={[fieldKey, 'dia']}
+                                            rules={[{ required: true, message: 'Selecciona un día!' }]}
+                                        >
+                                            <Select placeholder="Día de Recorrido" style={{ width: 120 }}>
+                                                <Option value="Lunes">Lunes</Option>
+                                                <Option value="Martes">Martes</Option>
+                                                <Option value="Miércoles">Miércoles</Option>
+                                                <Option value="Jueves">Jueves</Option>
+                                                <Option value="Viernes">Viernes</Option>
+                                            </Select>
+                                        </Form.Item>
+                                        <Button onClick={() => remove(name)}>Eliminar</Button>
+                                    </Space>
+                                ))}
+                                <Form.Item>
+                                    <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                        Agregar Día
+                                    </Button>
+                                </Form.Item>
+                            </div>
+                        )}
+                    </Form.List>
+                    <Form.Item
+                        name="observacion"
+                        label="Observación"
+                    >
+                        <Input />
+                    </Form.Item>
+                </Form>
             </Modal>
         </div>
     );

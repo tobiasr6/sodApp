@@ -1,0 +1,6 @@
+{
+    "Norte": ["Barrio Norte 1", "Barrio Norte 2", "Barrio Norte 3"],
+    "Sur": ["Barrio Sur 1", "Barrio Sur 2"],
+    "Este": ["Barrio Este 1", "Barrio Este 2", "Barrio Este 3", "Barrio Este 4"],
+    "Oeste": ["Barrio Oeste 1", "Barrio Oeste 2"]
+}

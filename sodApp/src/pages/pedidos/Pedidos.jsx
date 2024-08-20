@@ -140,8 +140,8 @@ const Pedidos = () => {
                         style={{ width: 200 }}
                     >
                         <Option value="">Todos los productos</Option>
-                        <Option value="agua">Agua</Option>
-                        <Option value="soda">Soda</Option>
+                        <Option value="Agua">Agua</Option>
+                        <Option value="Soda">Soda</Option>
                     </Select>
                     <Select
                         placeholder="Filtrar por día"
