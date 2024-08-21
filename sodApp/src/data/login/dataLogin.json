@@ -1,10 +1,14 @@
 [
     {
         "alias": "tobi",
-        "password": "1234"
+        "password": "44873598Tt"
     },
     {
         "alias":"pauli",
+        "password":"1234"
+    },
+    {
+        "alias":"fran",
         "password":"1234"
     }
 ]
