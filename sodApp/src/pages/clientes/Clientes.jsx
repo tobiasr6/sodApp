@@ -3,20 +3,38 @@ import { Table, Select, InputNumber, Button, Modal, Form, Input, Space, notifica
 import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { ClientesContext } from '../../components/context/ClientesContext';
 import zonasData from '../../data/zonas/zonas.json';
+// import useFetchClientes from './components/fetchClientes';
 
 const { Option } = Select;
 
 const Clientes = () => {
+    // const [cliente, fetchClientes] =  useFetchClientes();
+
+    // Obtiene el contexto de clientes y las funciones para manejar clientes
     const { clientes, addCliente, updateCliente, deleteCliente } = useContext(ClientesContext);
+
+    // Estado para almacenar los clientes filtrados
     const [filteredClientes, setFilteredClientes] = useState(clientes);
+
+     // Estado para los filtros aplicados
     const [filters, setFilters] = useState({ zona: '', producto: '', diaRecorrido: '' });
+
+     // Estado para el cliente que se está editando
     const [editingClient, setEditingClient] = useState(null);
+
+    // Estado para mostrar u ocultar el modal
     const [isModalVisible, setIsModalVisible] = useState(false);
+
+    // Estado para las zonas
     const [zonas, setZonas] = useState({});
-    const [barrios, setBarrios] = useState([]);
+
+    // Estado para la zona seleccionada
     const [selectedZona, setSelectedZona] = useState(null);
+
+    // Hook para manejar el formulario de Ant Design
     const [form] = Form.useForm();
 
+    // Efecto que se ejecuta al montar el componente, establece las zonas
     useEffect(() => {
         setZonas(zonasData);
     }, []);
@@ -31,6 +49,7 @@ const Clientes = () => {
         applyFilters(filters, clientes);
     }, [clientes]);
 
+    // Función para mostrar notificaciones
     const openNotificationWithIcon = (type, message) => {
         notification[type]({
             message: message,
@@ -38,67 +57,81 @@ const Clientes = () => {
         });
     };
 
+    // Función para abrir el modal para agregar un nuevo cliente
     const handleAddClient = () => {
-        setEditingClient(null);
-        form.resetFields();
-        setIsModalVisible(true);
+        setEditingClient(null);// No hay cliente para editar
+        form.resetFields(); // Resetea los campos del formulario
+        setIsModalVisible(true); // Muestra el modal
     };
 
+    // Función para abrir el modal para editar un cliente existente
     const handleEditClient = (client) => {
-        setEditingClient(client);
-        form.setFieldsValue(client);
-        setIsModalVisible(true);
+        setEditingClient(client); // No hay cliente para editar
+        form.setFieldsValue(client); // Resetea los campos del formulario
+        setIsModalVisible(true); // Muestra el modal
     };
 
     const handleDeleteClient = (id) => {
-        deleteCliente(id);
-        openNotificationWithIcon('success', 'Cliente eliminado exitosamente');
+        deleteCliente(id); // Elimina el cliente por ID
+        openNotificationWithIcon('success', 'Cliente eliminado exitosamente'); // Muestra notificación de éxito
     };
 
+    // Función para manejar la confirmación del modal
     const handleModalOk = () => {
-        form.validateFields().then(values => {
+        form.validateFields().then(values => { // Valida los campos del formulario
             if (editingClient) {
+                // Si hay un cliente en edición, actualiza sus datos
                 updateCliente(editingClient.id, values);
-                openNotificationWithIcon('success', 'Cliente editado exitosamente');
+                openNotificationWithIcon('success', 'Cliente editado exitosamente');// Notificación de éxito
             } else {
+                // Si es un nuevo cliente, lo agrega
                 addCliente(values);
-                openNotificationWithIcon('success', 'Cliente agregado exitosamente');
+                openNotificationWithIcon('success', 'Cliente agregado exitosamente'); // Notificación de éxito
             }
-            setIsModalVisible(false);
+            setIsModalVisible(false); // Cierra el modal
         });
     };
 
+    // Función para manejar el cierre del modal
     const handleModalCancel = () => {
-        setIsModalVisible(false);
+        setIsModalVisible(false);  // Cierra el modal
+
     };
 
+    // Función para aplicar los filtros a la lista de clientes
     const applyFilters = (filters, clientList) => {
         let filtered = clientList;
 
+        // Filtra por zona si está especificada
         if (filters.zona) {
             filtered = filtered.filter(client => client.zona === filters.zona);
         }
+        // Filtra por producto si está especificado
         if (filters.producto) {
             filtered = filtered.filter(client => client.pedidos.some(pedido => pedido.producto === filters.producto));
         }
+        // Filtra por día de recorrido si está especificado
         if (filters.diaRecorrido) {
             filtered = filtered.filter(client => client.diasRecorrido.some(dia => dia.dia === filters.diaRecorrido));
         }
 
-        setFilteredClientes(filtered);
+        setFilteredClientes(filtered); // Actualiza la lista de clientes filtrados
     };
 
+    // Maneja el cambio en los filtros
     const handleFilterChange = (value, key) => {
-        const updatedFilters = { ...filters, [key]: value };
-        setFilters(updatedFilters);
-        applyFilters(updatedFilters, clientes);
+        const updatedFilters = { ...filters, [key]: value }; // Actualiza el filtro correspondiente
+        setFilters(updatedFilters); // Establece los nuevos filtros
+        applyFilters(updatedFilters, clientes);  // Aplica los filtros a la lista de clientes
     };
 
+    // Función para limpiar todos los filtros
     const handleClearFilters = () => {
-        setFilters({ zona: '', producto: '', diaRecorrido: '' });
-        setFilteredClientes(clientes);
+        setFilters({ zona: '', producto: '', diaRecorrido: '' }); // Resetea los filtros
+        setFilteredClientes(clientes);  // Vuelve a mostrar la lista completa de clientes
     };
 
+    // Definición de las columnas de la tabla
     const columns = [
         {
             title: 'Nombre',
@@ -122,7 +155,7 @@ const Clientes = () => {
                 <div>
                     {record.pedidos.map((pedido, index) => (
                         <div key={index}>
-                            {pedido.cantidad} {pedido.producto}
+                            {pedido.cantidad} {pedido.producto} {/* Muestra la cantidad y el producto de los pedidos */}
                         </div>
                     ))}
                 </div>
@@ -135,11 +168,16 @@ const Clientes = () => {
                 <div>
                     {record.diasRecorrido.map((dia, index) => (
                         <div key={index}>
-                            {dia.dia}
+                            {dia.dia} {/* Muestra los días de recorrido del cliente */}
                         </div>
                     ))}
                 </div>
             ),
+        },
+        {
+            title: 'Telefono',
+            dataIndex: 'telefono',
+            key: 'telefono',
         },
         {
             title: 'Observación',
@@ -151,8 +189,9 @@ const Clientes = () => {
             key: 'acciones',
             render: (_, record) => (
                 <Space size="middle">
-                    <Button icon={<EditOutlined />} onClick={() => handleEditClient(record)} />
-                    <Button icon={<DeleteOutlined />} onClick={() => handleDeleteClient(record.id)} />
+                    <Button icon={<EditOutlined />} onClick={() => handleEditClient(record)} />  {/* Botón de editar */}
+                    <Button icon={<DeleteOutlined />} onClick={() => handleDeleteClient(record.id)} />   {/* Botón de eliminar */}
+
                 </Space>
             ),
         },
@@ -160,6 +199,7 @@ const Clientes = () => {
 
     return (
         <div>
+            {/* Componente de filtros para clientes */}
             <Space direction="vertical" size="middle" style={{ display: 'flex', margin: 8 }}>
                 <Space>
                     <Button type="primary" icon={<PlusOutlined />} onClick={handleAddClient}>
@@ -207,6 +247,7 @@ const Clientes = () => {
                 <Table columns={columns} dataSource={filteredClientes} rowKey="id" />
             </Space>
 
+            {/* Modal para agregar/editar clientes */}
             <Modal
                 title={editingClient ? "Editar Cliente" : "Agregar Nuevo Cliente"}
                 visible={isModalVisible}
@@ -329,6 +370,13 @@ const Clientes = () => {
                     <Form.Item
                         name="observacion"
                         label="Observación"
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item
+                        name="telefono"
+                        label="Telefono"
+                        rules={[{ required: true, message: 'Por favor ingresa el telefono del cliente!' }]}
                     >
                         <Input />
                     </Form.Item>
