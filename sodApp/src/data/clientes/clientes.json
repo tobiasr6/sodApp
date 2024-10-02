@@ -16,6 +16,7 @@
                 "dia": "Miércoles"
                 }
             ],
+        "telefono": "55555555",
         "observacion": "Cliente puntual, paga en efectivo."
     },
     {
@@ -31,6 +32,7 @@
                 "dia": "Miércoles"
                 }
             ],
+        "telefono": "55555555",
         "observacion": "Solicita entrega antes de las 10 AM."
     },
     {
@@ -45,6 +47,7 @@
                 "dia": "Viernes"
                 }
             ],
+        "telefono": "55555555",
         "observacion": "Prefiere transferencia bancaria."
     }
 ]
