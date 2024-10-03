@@ -1,8 +1,26 @@
 const API_BASE_URL = 'http://localhost:3000/api'
 
-const apiClientes ={
+const apiClientes = {
     //!GET
-    todosClientes: '/clientes'
+    todosClientes: '/clientes',
+
+    //!POST
+    crearCliente: '/clientes',
 }
 
-export default (API_BASE_URL, apiClientes);
+const apiZonas = {
+    //!GET
+    todasZonas: '/zonas',
+}
+
+const apiDias = {
+    //!GET
+    todosDias: '/dia',
+}
+
+const apiProducto = {
+    //!GET
+    todosProductos: '/producto',
+}
+
+export default { API_BASE_URL, apiClientes, apiZonas, apiDias, apiProducto };
