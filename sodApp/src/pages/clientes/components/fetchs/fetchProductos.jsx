@@ -15,7 +15,6 @@ const useFetchProductos = () => {
         `${apiConfig.API_BASE_URL}${apiConfig.apiProducto.todosProductos}`
       );
       setProductos(response.data);
-      console.log('Data: ', response.data)
 
     } catch (error) {
         setError('Error al obtener los productos');
