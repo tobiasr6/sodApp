@@ -2,16 +2,22 @@ import { useState } from 'react';
 import { Table } from 'antd';
 import useFetchClientes from './components/fetchs/fetchClientes'; // Ruta del hook
 import FiltrosClientes from './components/FiltrosClientes'; // Importa el componente de filtros
+import DeleteCliente from './components/DeleteCliente'; // Importa correctamente el componente DeleteCliente
+import AddCliente from './components/AddCliente';
 
 const ClientesTable = () => {
-  const [clientes] = useFetchClientes();
-  
-  // Estado para los filtros
+  const [clientes, setClientes] = useFetchClientes(); // Asegúrate de actualizar el estado con setClientes
+
   const [filters, setFilters] = useState({
     zona: '',
     producto: '',
     diaRecorrido: '',
-  });  
+  });
+
+  // Función que maneja cuando se elimina un cliente
+  const onClienteEliminado = (id) => {
+    setClientes((prevClientes) => prevClientes.filter((cliente) => cliente.id !== id));
+  };
 
   // Manejar cambios en los filtros
   const handleFilterChange = (value, type) => {
@@ -19,9 +25,7 @@ const ClientesTable = () => {
       ...prevFilters,
       [type]: value,
     }));
-    // Aquí podrías realizar cualquier otra lógica necesaria
   };
-  
 
   // Limpiar los filtros
   const handleClearFilters = () => {
@@ -42,7 +46,7 @@ const ClientesTable = () => {
     const matchesZona = filters.zona ? cliente.nombreZona === filters.zona : true;
     const matchesProducto = filters.producto ? cliente.pedidos.some(p => p.producto === filters.producto) : true;
     const matchesDia = filters.diaRecorrido ? cliente.diasRecorrido.some(dia => dia.dia === filters.diaRecorrido) : true;
-  
+
     return matchesZona && matchesProducto && matchesDia;
   });
 
@@ -52,16 +56,21 @@ const ClientesTable = () => {
       title: 'Nombre',
       dataIndex: 'nombre',
       key: 'nombre',
+      width: 200
     },
     {
       title: 'Dirección',
       dataIndex: 'direccion',
       key: 'direccion',
+      width: 200
+
     },
     {
       title: 'Zona',
       dataIndex: 'nombreZona',
       key: 'nombreZona',
+      width: 200
+
     },
     {
       title: 'Pedidos Habituales',
@@ -78,7 +87,9 @@ const ClientesTable = () => {
             <span>No hay pedidos habituales</span>
           )}
         </div>
-      )
+      ),
+      width: 250
+
     },
     {
       title: 'Días de Recorrido',
@@ -91,21 +102,31 @@ const ClientesTable = () => {
             </div>
           ))}
         </div>
-      )
+      ),
+      width: 250
+
     },
     {
       title: 'Teléfono',
       dataIndex: 'telefono',
       key: 'telefono',
+      width: 200
+
     },
     {
       title: 'Observaciones',
       dataIndex: 'observaciones',
       key: 'observaciones',
+      width: 300
+
     },
     {
       title: 'Acciones',
       key: 'acciones',
+      render: (_, record) => (
+        <DeleteCliente idCliente={record.id} onClienteEliminado={onClienteEliminado} />
+      ),
+      width: 100
     },
   ];
 
