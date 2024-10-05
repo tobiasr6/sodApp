@@ -6,6 +6,9 @@ const apiClientes = {
 
     //!POST
     crearCliente: '/clientes',
+
+    //! DELETE
+    eliminarCliente: (id) => `/clientes/${id}`
 }
 
 const apiZonas = {
