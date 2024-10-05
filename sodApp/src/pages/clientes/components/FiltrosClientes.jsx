@@ -4,22 +4,29 @@ import PropTypes from 'prop-types'; // Importar PropTypes
 import useFetchZonas from './fetchs/fetchZonas';
 import useFetchDias from './fetchs/fetchDias';
 import useFetchProductos from './fetchs/fetchProductos';
+import AddCliente from './AddCliente';
+import { useState } from 'react';
 
 const { Option } = Select;
 
-const FiltrosClientes = ({
-  filters,
-  handleFilterChange,
-  handleClearFilters,
-  handleAddClient
-}) => {
+const FiltrosClientes = ({ filters, handleFilterChange, handleClearFilters }) => {
   const { zonas, loading: loadingZonas, error: errorZonas } = useFetchZonas();
   const { dias, loading: loadingDias, error: errorDias } = useFetchDias();
   const {
     productos,
     loading: loadingProductos,
     error: errorProductos
-  } = useFetchProductos();  
+  } = useFetchProductos(); 
+  
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
+  };
 
   if (loadingZonas || loadingDias || loadingProductos) {
     return <Spin tip='Cargando...' />;
@@ -35,10 +42,13 @@ const FiltrosClientes = ({
         <Button
           type='primary'
           icon={<PlusOutlined />}
-          onClick={handleAddClient}
+          onClick={showModal}
         >
           Agregar Cliente
         </Button>
+
+        <AddCliente visible={isModalVisible} onClose={handleCloseModal} />
+
         <Select
           placeholder='Filtrar por zona'
           onChange={(value) => handleFilterChange(value, 'zona')}
