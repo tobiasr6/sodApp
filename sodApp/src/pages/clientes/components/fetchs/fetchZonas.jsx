@@ -15,7 +15,6 @@ const useFetchZonas = () => {
         `${apiConfig.API_BASE_URL}${apiConfig.apiZonas.todasZonas}`
       );
       setZonas(response.data);
-      console.log('Data: ', response.data)
 
     } catch (error) {
         setError('Error al obtener las zonas');

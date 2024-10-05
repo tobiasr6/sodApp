@@ -15,7 +15,6 @@ const useFetchDias = () => {
         `${apiConfig.API_BASE_URL}${apiConfig.apiDias.todosDias}`
       );
       setDias(response.data);
-      console.log('Data: ', response.data)
 
     } catch (error) {
         setError('Error al obtener los dias');

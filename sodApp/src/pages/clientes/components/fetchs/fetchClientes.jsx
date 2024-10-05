@@ -15,7 +15,6 @@ const useFetchClientes = () => {
         ? response.data
         : [];
       setClientes(usersArray);
-      console.log('Data: ', response.data)
 
     } catch (error) {
       console.error('Hubo un error al obtener los clientes:', error);
