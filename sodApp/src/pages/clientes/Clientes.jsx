@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Table } from 'antd';
-import useFetchClientes from './components/fetchs/fetchClientes'; // Ruta del hook
+import useFetchClientes from '../../routes/fetchs/fetchClientes'; // Ruta del hook
 import FiltrosClientes from './components/FiltrosClientes'; // Importa el componente de filtros
 import DeleteCliente from './components/DeleteCliente'; // Importa correctamente el componente DeleteCliente
 
