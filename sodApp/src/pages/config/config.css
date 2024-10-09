@@ -1,0 +1,22 @@
+/* config.css */
+.config h1 {
+    font-size: 24px; /* Cambia el tamaño del título */
+  }
+  
+  .ant-tabs-tab {
+    font-size: 16px !important; /* Cambia el tamaño del texto de las pestañas */
+    padding: 16px 24px !important; /* Aumenta el área clicable */
+  }
+  
+  .ant-tabs-nav .ant-tabs-tab-btn {
+    font-size: 16px !important; /* Asegura que el texto sea más grande */
+  }
+  
+  .ant-tabs-nav .ant-tabs-tab {
+    height: auto !important; /* Ajusta la altura automáticamente */
+  }
+  
+  .ant-tabs-ink-bar {
+    height: 4px !important; /* Aumenta el grosor de la barra de selección */
+  }
+  
