@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Layout, Menu, Modal } from 'antd';
-import { UserOutlined, ShopOutlined, CarOutlined, EnvironmentOutlined, LogoutOutlined } from '@ant-design/icons';
+import { UserOutlined, ShopOutlined, CarOutlined, EnvironmentOutlined, LogoutOutlined,  SettingOutlined } from '@ant-design/icons';
 import { useNavigate, Outlet } from 'react-router-dom';
 import logoCompleto from '../assets/SODAPP.png';  // Importar logo completo
 import imagotipo from '../assets/Soda.png';        // Importar imagotipo
@@ -53,6 +53,9 @@ const BaseLayout = () => {
                     </Menu.Item>
                     <Menu.Item key="/zonas" icon={<EnvironmentOutlined />}>
                         Zonas
+                    </Menu.Item>
+                    <Menu.Item key= "/config" icon= {<SettingOutlined />}>
+                        Configuración
                     </Menu.Item>
                     <Menu.Item key="logout" icon={<LogoutOutlined />}>
                         Cerrar Sesión
