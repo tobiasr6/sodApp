@@ -18,14 +18,14 @@ const FiltrosClientes = ({ filters, handleFilterChange, handleClearFilters }) =>
     error: errorProductos
   } = useFetchProductos(); 
   
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
-  const showModal = () => {
-    setIsModalVisible(true);
+  const handleOpenModal = () => {
+    setModalVisible(true);
   };
 
   const handleCloseModal = () => {
-    setIsModalVisible(false);
+    setModalVisible(false);
   };
 
   if (loadingZonas || loadingDias || loadingProductos) {
@@ -42,12 +42,12 @@ const FiltrosClientes = ({ filters, handleFilterChange, handleClearFilters }) =>
         <Button
           type='primary'
           icon={<PlusOutlined />}
-          onClick={showModal}
+          onClick={handleOpenModal}
         >
           Agregar Cliente
         </Button>
 
-        <AddCliente visible={isModalVisible} onClose={handleCloseModal} />
+        <AddCliente visible={modalVisible} onClose={handleCloseModal}/>
 
         <Select
           placeholder='Filtrar por zona'
