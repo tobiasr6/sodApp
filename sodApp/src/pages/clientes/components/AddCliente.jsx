@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Modal, Input, Button, Space, Select, message, Row, Col } from 'antd';
-import useFetchBarrios from './fetchs/fetchBarrios'; // Importación de los barrios
-import useFetchDias from './fetchs/fetchDias';
-import useFetchProductos from './fetchs/fetchProductos';
+import useFetchBarrios from '../../../routes/fetchs/fetchBarrios'; // Importación de los barrios
+import useFetchDias from '../../../routes/fetchs/fetchDias';
+import useFetchProductos from '../../../routes/fetchs/fetchProductos';
 
 const { Option } = Select;
 
