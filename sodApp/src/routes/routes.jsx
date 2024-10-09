@@ -5,6 +5,7 @@ import Clientes from '../pages/clientes/Clientes';
 import Pedidos from '../pages/pedidos/Pedidos';
 import Entregas from '../pages/entregas/Entregas';
 import Zonas from '../pages/zonas/Zonas';
+import Config from '../pages/config/Config';
 
 function AppRoutes() {
     return (
@@ -16,6 +17,7 @@ function AppRoutes() {
                     <Route path="/pedidos" element={<Pedidos />} />
                     <Route path="/entregas" element={<Entregas />} />
                     <Route path="/zonas" element={<Zonas />} />
+                    <Route path="/config" element={<Config />} />
                 </Route>
             </Routes>
         </Router>
