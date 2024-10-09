@@ -3,7 +3,6 @@ import { Table } from 'antd';
 import useFetchClientes from './components/fetchs/fetchClientes'; // Ruta del hook
 import FiltrosClientes from './components/FiltrosClientes'; // Importa el componente de filtros
 import DeleteCliente from './components/DeleteCliente'; // Importa correctamente el componente DeleteCliente
-import AddCliente from './components/AddCliente';
 
 const ClientesTable = () => {
   const [clientes, setClientes] = useFetchClientes(); // Asegúrate de actualizar el estado con setClientes
