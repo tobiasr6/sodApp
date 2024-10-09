@@ -26,4 +26,9 @@ const apiProducto = {
     todosProductos: '/producto',
 }
 
-export default { API_BASE_URL, apiClientes, apiZonas, apiDias, apiProducto };
+const apiBarrios = {
+    //!GET
+    todosBarrios: '/barrios',
+}
+
+export default { API_BASE_URL, apiClientes, apiZonas, apiDias, apiProducto, apiBarrios };
