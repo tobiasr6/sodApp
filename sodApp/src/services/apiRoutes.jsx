@@ -31,4 +31,9 @@ const apiBarrios = {
     todosBarrios: '/barrios',
 }
 
-export default { API_BASE_URL, apiClientes, apiZonas, apiDias, apiProducto, apiBarrios };
+const apiUsuarios = {
+    //!GET
+    todosUsuarios: '/users',
+}
+
+export default { API_BASE_URL, apiClientes, apiZonas, apiDias, apiProducto, apiBarrios, apiUsuarios };
