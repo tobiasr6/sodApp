@@ -1,9 +1,9 @@
 import { Select, Space, Button, Spin, Alert } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types'; // Importar PropTypes
-import useFetchZonas from './fetchs/fetchZonas';
-import useFetchDias from './fetchs/fetchDias';
-import useFetchProductos from './fetchs/fetchProductos';
+import useFetchZonas from '../../../routes/fetchs/fetchZonas';
+import useFetchDias from '../../../routes/fetchs/fetchDias';
+import useFetchProductos from '../../../routes/fetchs/fetchProductos';
 import AddCliente from './AddCliente';
 import { useState } from 'react';
 
