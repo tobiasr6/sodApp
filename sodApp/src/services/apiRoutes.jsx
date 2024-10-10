@@ -8,7 +8,10 @@ const apiClientes = {
     crearCliente: '/clientes',
 
     //! DELETE
-    eliminarCliente: (id) => `/clientes/${id}`
+    eliminarCliente: (id) => `/clientes/${id}`,
+
+    //!PUT
+    editarCliente: (id) => `/clientes/${id}`
 }
 
 const apiZonas = {
@@ -34,6 +37,9 @@ const apiBarrios = {
 const apiUsuarios = {
     //!GET
     todosUsuarios: '/users',
+
+    //!POST
+    userActivo: '/login'
 }
 
 export default { API_BASE_URL, apiClientes, apiZonas, apiDias, apiProducto, apiBarrios, apiUsuarios };
