@@ -3,6 +3,8 @@ import { Table } from 'antd';
 import useFetchClientes from '../../routes/fetchs/fetchClientes'; // Ruta del hook
 import FiltrosClientes from './components/FiltrosClientes'; // Importa el componente de filtros
 import DeleteCliente from './components/DeleteCliente'; // Importa correctamente el componente DeleteCliente
+import EditarCliente from './components/EditCliente'; // Asegúrate de que el nombre del componente sea correcto
+import ConsultarCliente from './components/ConsultingCliente'; // Asegúrate de que el nombre del componente sea correcto
 
 const ClientesTable = () => {
   const [clientes, setClientes] = useFetchClientes(); // Asegúrate de actualizar el estado con setClientes
@@ -35,9 +37,10 @@ const ClientesTable = () => {
     });
   };
 
-  // Función para agregar cliente
+  // Función para agregar cliente (puedes enlazar a un modal aquí)
   const handleAddClient = () => {
     console.log('Agregar nuevo cliente');
+    // Implementa la lógica para abrir un modal o formulario para agregar un nuevo cliente
   };
 
   // Filtrar los clientes en base a los filtros
@@ -55,21 +58,19 @@ const ClientesTable = () => {
       title: 'Nombre',
       dataIndex: 'nombre',
       key: 'nombre',
-      width: 200
+      width: 200,
     },
     {
       title: 'Dirección',
       dataIndex: 'direccion',
       key: 'direccion',
-      width: 200
-
+      width: 200,
     },
     {
       title: 'Zona',
       dataIndex: 'nombreZona',
       key: 'nombreZona',
-      width: 200
-
+      width: 200,
     },
     {
       title: 'Pedidos Habituales',
@@ -87,8 +88,7 @@ const ClientesTable = () => {
           )}
         </div>
       ),
-      width: 250
-
+      width: 250,
     },
     {
       title: 'Días de Recorrido',
@@ -102,30 +102,31 @@ const ClientesTable = () => {
           ))}
         </div>
       ),
-      width: 250
-
+      width: 250,
     },
     {
       title: 'Teléfono',
       dataIndex: 'telefono',
       key: 'telefono',
-      width: 200
-
+      width: 200,
     },
     {
       title: 'Observaciones',
       dataIndex: 'observaciones',
       key: 'observaciones',
-      width: 300
-
+      width: 280,
     },
     {
       title: 'Acciones',
       key: 'acciones',
       render: (_, record) => (
-        <DeleteCliente idCliente={record.id} onClienteEliminado={onClienteEliminado} />
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around' }}>
+          <EditarCliente cliente={record} /> {/* Cambia a record si EditarCliente necesita más información */}
+          <ConsultarCliente cliente={record} />
+          <DeleteCliente idCliente={record.id} onClienteEliminado={onClienteEliminado} />
+        </div>
       ),
-      width: 100
+      width: 160,
     },
   ];
 
