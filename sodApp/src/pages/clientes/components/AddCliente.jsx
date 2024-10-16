@@ -3,6 +3,7 @@ import { Modal, Input, Button, Space, Select, message, Row, Col } from 'antd';
 import useFetchBarrios from '../../../routes/fetchs/fetchBarrios'; // Importación de los barrios
 import useFetchDias from '../../../routes/fetchs/fetchDias';
 import useFetchProductos from '../../../routes/fetchs/fetchProductos';
+import { agregarClienteService } from '../services/addCliente';
 
 const { Option } = Select;
 
@@ -29,6 +30,12 @@ const IngresarNombreModal = ({ visible, onClose }) => {
       return;
     }
 
+    // Validación para evitar espacios en el teléfono
+    if (telefono.trim().includes(' ')) {
+      message.error('El teléfono no debe contener espacios.');
+      return;
+    }
+
     const clienteData = {
       nombre,
       direccion,
@@ -37,17 +44,26 @@ const IngresarNombreModal = ({ visible, onClose }) => {
       observaciones,
       pedidos: pedidos.map((pedido) => ({
         cantidad: Number(pedido.cantidad),
-        producto: pedido.idProducto,
+        producto: pedido.idProducto
       })),
       diasRecorrido: diasRecorrido.map((diaRecorrido) => ({
-        dia: diaRecorrido.idDia,
-      })),
+        dia: diaRecorrido.idDia
+      }))
     };
 
-    console.log(JSON.stringify(clienteData, null, 2));
+    console.log(clienteData);
+    agregarClienteService(clienteData)
+      .then(() => {
+        message.success('Cliente agregado correctamente!');
+        onClose();
+        resetFields();
+        window.location.reload();
+      })
+      .catch((error) => {
+        message.error(error.message);
+      });
 
-    onClose();
-    resetFields(); // Reiniciar campos después de cerrar
+    console.log(JSON.stringify(clienteData, null, 2));
   };
 
   const resetFields = () => {
@@ -75,7 +91,8 @@ const IngresarNombreModal = ({ visible, onClose }) => {
   };
 
   const addDiaRecorrido = () => {
-    if (diasRecorrido.length < 2) { // Limitar a 2 días
+    if (diasRecorrido.length < 2) {
+      // Limitar a 2 días
       setDiasRecorrido([...diasRecorrido, { idDia: null }]);
     }
   };
@@ -99,7 +116,7 @@ const IngresarNombreModal = ({ visible, onClose }) => {
   const handleCantidadChange = (index, value) => {
     // Convertir el valor a número
     const cantidad = Number(value);
-  
+
     // Solo actualizar si es un número no negativo
     if (cantidad >= 0 || value === '') {
       const newPedidos = [...pedidos];
@@ -165,8 +182,13 @@ const IngresarNombreModal = ({ visible, onClose }) => {
 
       <Input
         value={telefono}
-        onChange={(e) => setTelefono(e.target.value)}
+        onChange={(e) => {
+          const value = e.target.value.replace(/\D/g, ''); // Remover cualquier carácter que no sea numérico
+          setTelefono(value);
+        }}
         placeholder='Teléfono'
+        inputMode='numeric' // Sugiere el teclado numérico en móviles
+        pattern='[0-9]*' // Acepta solo números
         style={{ marginTop: 10 }}
         required
       />
