@@ -51,9 +51,6 @@ const BaseLayout = () => {
                     <Menu.Item key="/pedidos" icon={<ShopOutlined />}>
                         Pedidos
                     </Menu.Item>
-                    <Menu.Item key="/zonas" icon={<EnvironmentOutlined />}>
-                        Zonas
-                    </Menu.Item>
                     <Menu.Item key= "/config" icon= {<SettingOutlined />}>
                         Configuración
                     </Menu.Item>
