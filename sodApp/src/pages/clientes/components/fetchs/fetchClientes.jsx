@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import apiConfig from '../../../services/apiRoutes'; // Asegúrate de importar la configuración de tu API correctamente
+import apiConfig from '../../../../services/apiRoutes'; // Asegúrate de importar la configuración de tu API correctamente
 import { message } from 'antd';
 
 const useFetchClientes = () => {
