@@ -1,5 +1,15 @@
 import { useState, useEffect } from 'react';
-import { Modal, Input, Button, Space, Select, message, Row, Col } from 'antd';
+import {
+  Modal,
+  Input,
+  Button,
+  Space,
+  Select,
+  message,
+  Row,
+  Col,
+  Divider
+} from 'antd';
 import useFetchBarrios from '../../../routes/fetchs/fetchBarrios'; // Importación de los barrios
 import useFetchDias from '../../../routes/fetchs/fetchDias';
 import useFetchProductos from '../../../routes/fetchs/fetchProductos';
@@ -150,21 +160,33 @@ const IngresarNombreModal = ({ visible, onClose }) => {
       onOk={handleOk}
       onCancel={onClose}
     >
+      <label style={{ fontWeight: 'bold' }}>
+        Nombre <span style={{ color: 'red' }}>*</span>
+      </label>
       <Input
         value={nombre}
         onChange={(e) => setNombre(e.target.value)}
         placeholder='Nombre'
+        style={{ marginBottom: 10 }} // Aumentar el margen
         required
       />
+
+      <label style={{ fontWeight: 'bold' }}>
+        Dirección <span style={{ color: 'red' }}>*</span>
+      </label>
       <Input
         value={direccion}
         onChange={(e) => setDireccion(e.target.value)}
         placeholder='Dirección'
-        style={{ marginTop: 10 }}
+        style={{ marginBottom: 10 }} // Aumentar el margen
         required
       />
+
+      <label style={{ fontWeight: 'bold' }}>
+        Barrio <span style={{ color: 'red' }}>*</span>
+      </label>
       <Select
-        style={{ width: '100%', marginTop: 10 }}
+        style={{ width: '100%', marginBottom: 10 }} // Aumentar el margen
         placeholder='Selecciona un barrio'
         onChange={handleBarrioChange}
         showSearch
@@ -180,6 +202,9 @@ const IngresarNombreModal = ({ visible, onClose }) => {
         ))}
       </Select>
 
+      <label style={{ fontWeight: 'bold' }}>
+        Teléfono <span style={{ color: 'red' }}>*</span>
+      </label>
       <Input
         value={telefono}
         onChange={(e) => {
@@ -189,21 +214,24 @@ const IngresarNombreModal = ({ visible, onClose }) => {
         placeholder='Teléfono'
         inputMode='numeric' // Sugiere el teclado numérico en móviles
         pattern='[0-9]*' // Acepta solo números
-        style={{ marginTop: 10 }}
+        style={{ marginBottom: 10 }} // Aumentar el margen
         required
       />
+
+      <label style={{ fontWeight: 'bold' }}>Observaciones</label>
       <Input
         value={observaciones}
         onChange={(e) => setObservaciones(e.target.value)}
         placeholder='Observaciones'
-        style={{ marginTop: 10 }}
+        style={{ marginBottom: 10 }} // Aumentar el margen
       />
 
       <div style={{ marginTop: 20 }}>
-        <h4>Pedidos</h4>
+        <Divider>Pedidos</Divider>
         {pedidos.map((pedido, index) => (
           <Row key={index} style={{ marginBottom: 10 }} align='middle'>
             <Col span={9} style={{ marginRight: 10 }}>
+              <label style={{ fontWeight: 'bold' }}>Cantidad</label>
               <Input
                 style={{ width: '100%' }}
                 value={pedido.cantidad}
@@ -215,6 +243,7 @@ const IngresarNombreModal = ({ visible, onClose }) => {
               />
             </Col>
             <Col span={9}>
+              <label style={{ fontWeight: 'bold' }}>Producto</label>
               <Select
                 style={{ width: '100%' }}
                 placeholder='Selecciona un producto'
@@ -235,16 +264,21 @@ const IngresarNombreModal = ({ visible, onClose }) => {
             </Col>
           </Row>
         ))}
-        <Button onClick={addPedido} type='dashed' style={{ width: '100%' }}>
-          Agregar Pedido
+            <Button type='dashed' onClick={addPedido} style={{ width: '100%' }}>
+          Agregar pedido
         </Button>
       </div>
 
-      <div style={{ marginTop: 20 }}>
-        <h4>Días de Recorrido</h4>
+      <div
+        style={{
+          marginTop: 20,
+        }}
+      >
+        <Divider>Días de Recorrido</Divider>
         {diasRecorrido.map((diaRecorrido, index) => (
-          <Row key={index} style={{ marginBottom: 10 }} align='middle'>
+          <Row key={index} style={{ marginBottom: 10 }}>
             <Col span={20}>
+              <label style={{ fontWeight: 'bold' }}>Día</label>
               <Select
                 style={{ width: '100%' }}
                 placeholder='Selecciona un día'
@@ -258,20 +292,31 @@ const IngresarNombreModal = ({ visible, onClose }) => {
                 ))}
               </Select>
             </Col>
-            <Col span={4}>
-              <Button type='link' onClick={() => removeDiaRecorrido(index)}>
+            <Col
+              span={4}
+              style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+            >
+              <Button
+                type='link'
+                onClick={() => removeDiaRecorrido(index)}
+                style={{ margin: 0 }}
+              >
                 Eliminar
               </Button>
             </Col>
           </Row>
         ))}
-        <Button
-          onClick={addDiaRecorrido}
-          type='dashed'
-          style={{ width: '100%' }}
+        <div
+          style={{ marginTop: 10 }}
         >
-          Agregar Día
-        </Button>
+          <Button
+            onClick={addDiaRecorrido}
+            type='dashed'
+            style={{ width: '100%' }}
+          >
+            Agregar Día
+          </Button>
+        </div>
       </div>
     </Modal>
   );
