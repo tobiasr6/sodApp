@@ -43,4 +43,9 @@ const apiUsuarios = {
     userActivo: '/login'
 }
 
-export default { API_BASE_URL, apiClientes, apiZonas, apiDias, apiProducto, apiBarrios, apiUsuarios };
+const apiEstado = {
+    //!GET
+    todosEstados: '/estado',
+}
+
+export default { API_BASE_URL, apiClientes, apiZonas, apiDias, apiProducto, apiBarrios, apiUsuarios, apiEstado };
