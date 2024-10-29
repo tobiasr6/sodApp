@@ -39,7 +39,7 @@ const ClientesTable = () => {
 
   // Función para agregar cliente (puedes enlazar a un modal aquí)
   const handleAddClient = () => {
-    console.log('Agregar nuevo cliente');
+    // console.log('Agregar nuevo cliente');
     // Implementa la lógica para abrir un modal o formulario para agregar un nuevo cliente
   };
 
