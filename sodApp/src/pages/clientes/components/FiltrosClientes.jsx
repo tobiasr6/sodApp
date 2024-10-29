@@ -12,11 +12,7 @@ const { Option } = Select;
 const FiltrosClientes = ({ filters, handleFilterChange, handleClearFilters }) => {
   const { zonas, loading: loadingZonas, error: errorZonas } = useFetchZonas();
   const { dias, loading: loadingDias, error: errorDias } = useFetchDias();
-  const {
-    productos,
-    loading: loadingProductos,
-    error: errorProductos
-  } = useFetchProductos(); 
+  const { productos, loading: loadingProductos, error: errorProductos} = useFetchProductos(); 
   
   const [modalVisible, setModalVisible] = useState(false);
 
