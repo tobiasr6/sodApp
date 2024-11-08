@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Table } from 'antd';
 import useFetchClientes from '../../routes/fetchs/fetchClientes'; // Ruta del hook
 import FiltrosClientes from './components/FiltrosClientes'; // Importa el componente de filtros
-import DeleteCliente from './components/DeleteCliente'; // Importa correctamente el componente DeleteCliente
+// import DeleteCliente from './components/DeleteCliente'; // Importa correctamente el componente DeleteCliente
 import EditarCliente from './components/EditCliente'; // Asegúrate de que el nombre del componente sea correcto
 import ConsultarCliente from './components/ConsultingCliente'; // Asegúrate de que el nombre del componente sea correcto
 
@@ -16,9 +16,9 @@ const ClientesTable = () => {
   });
 
   // Función que maneja cuando se elimina un cliente
-  const onClienteEliminado = (id) => {
-    setClientes((prevClientes) => prevClientes.filter((cliente) => cliente.id !== id));
-  };
+  // const onClienteEliminado = (id) => {
+  //   setClientes((prevClientes) => prevClientes.filter((cliente) => cliente.id !== id));
+  // };
 
   // Manejar cambios en los filtros
   const handleFilterChange = (value, type) => {
@@ -117,13 +117,19 @@ const ClientesTable = () => {
       width: 280,
     },
     {
+      title: 'Estado',
+      dataIndex: 'estado',
+      key: 'estado',
+      width: 200,
+    },
+    {
       title: 'Acciones',
       key: 'acciones',
       render: (_, record) => (
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around' }}>
           <EditarCliente cliente={record} /> {/* Cambia a record si EditarCliente necesita más información */}
           <ConsultarCliente cliente={record} />
-          <DeleteCliente idCliente={record.id} onClienteEliminado={onClienteEliminado} />
+          {/* <DeleteCliente idCliente={record.id} onClienteEliminado={onClienteEliminado} /> */}
         </div>
       ),
       width: 160,
