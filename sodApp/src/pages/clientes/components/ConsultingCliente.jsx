@@ -67,6 +67,14 @@ const MostrarCliente = ({ cliente }) => {
           </Col>
         </Row>
 
+        {/* Estado */}
+        <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
+          <Col span={24}>
+            <label style={{ fontWeight: 'bold' }}>Estado</label>
+            <Input value={cliente?.estado || ''} readOnly />
+          </Col>
+        </Row>
+
         <Divider>Pedidos</Divider>
 
         {/* Pedidos */}
