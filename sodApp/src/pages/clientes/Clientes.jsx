@@ -13,6 +13,7 @@ const ClientesTable = () => {
     zona: '',
     producto: '',
     diaRecorrido: '',
+    estado: '',
   });
 
   // Función que maneja cuando se elimina un cliente
@@ -34,6 +35,7 @@ const ClientesTable = () => {
       zona: '',
       producto: '',
       diaRecorrido: '',
+      estado: '',
     });
   };
 
@@ -48,8 +50,9 @@ const ClientesTable = () => {
     const matchesZona = filters.zona ? cliente.nombreZona === filters.zona : true;
     const matchesProducto = filters.producto ? cliente.pedidos.some(p => p.producto === filters.producto) : true;
     const matchesDia = filters.diaRecorrido ? cliente.diasRecorrido.some(dia => dia.dia === filters.diaRecorrido) : true;
+    const matchesEstado = filters.estado ? cliente.estado === filters.estado : true;
 
-    return matchesZona && matchesProducto && matchesDia;
+    return matchesZona && matchesProducto && matchesDia && matchesEstado;
   });
 
   // Definir las columnas de la tabla
