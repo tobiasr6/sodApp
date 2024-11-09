@@ -5,18 +5,10 @@ import useFetchProductos from '../../../routes/fetchs/fetchProductos';
 
 const { Option } = Select;
 
-const FiltrosPedidos = ({
-  filters,
-  handleFilterChange,
-  handleClearFilters
-}) => {
+const FiltrosPedidos = ({ filters, handleFilterChange, handleClearFilters }) => {
   const { zonas, loading: loadingZonas, error: errorZonas } = useFetchZonas();
   const { dias, loading: loadingDias, error: errorDias } = useFetchDias();
-  const {
-    productos,
-    loading: loadingProductos,
-    error: errorProductos
-  } = useFetchProductos();
+  const { productos,loading: loadingProductos, error: errorProductos } = useFetchProductos();
 
   if (loadingZonas || loadingDias || loadingProductos) {
     return <Spin tip='Cargando...' />;
