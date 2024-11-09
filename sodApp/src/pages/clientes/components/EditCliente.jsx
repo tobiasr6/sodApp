@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Modal, Input, Button, Select, message } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
-import { editClient } from '../../../routes/put/editClientService'; // Importar la función de envío al backend
+import { editClient, editEstadoClient } from '../../../routes/put/editClientService'; // Importar la función de envío al backend
 import useFetchBarrios from '../../../routes/fetchs/fetchBarrios'; // Asegúrate de que estas rutas sean correctas
 import useFetchDias from '../../../routes/fetchs/fetchDias';
 import useFetchProductos from '../../../routes/fetchs/fetchProductos';
@@ -17,6 +17,7 @@ const EditarCliente = ({ cliente }) => {
   const [observaciones, setObservaciones] = useState('');
   const [pedidos, setPedidos] = useState([{ cantidad: '', idProducto: null }]);
   const [diasRecorrido, setDiasRecorrido] = useState([{ idDia: '' }]);
+  const [estado, setEstado] = useState(''); 
   const [idCliente, setIdCliente] = useState('');
 
   // Hook personalizado para obtener los barrios, días y productos
@@ -60,6 +61,8 @@ const EditarCliente = ({ cliente }) => {
           };
         })
       );
+
+      setEstado(cliente.estado);
     }
   };
 
@@ -94,14 +97,20 @@ const EditarCliente = ({ cliente }) => {
       }))
     };
 
+    const clienteEstado = {
+      estado
+    }
+
     try {
       await editClient(cliente.id, clienteData); // Enviar al backend
+      await editEstadoClient(cliente.id, clienteEstado)
       message.success('Cliente actualizado con éxito');
       handleCancel();
       window.location.reload();
       // console.log('clienteData', clienteData);
     } catch (error) {
       message.error('Error al actualizar el cliente');
+      console.error(error)
       // console.log('clienteData', clienteData);
       // console.log('diasRecorrido', diasRecorrido);
       // console.log('dias', dias);
@@ -169,21 +178,25 @@ const EditarCliente = ({ cliente }) => {
           </Button>
         ]}
       >
+        <label style={{ fontWeight: 'bold' }}>Nombre</label>
         <Input
           value={nombre}
           onChange={(e) => setNombre(e.target.value)}
           placeholder='Nombre'
+          style={{ marginBottom: 10 }}
           required
         />
+        <label style={{ fontWeight: 'bold' }}>Dirección</label>
         <Input
           value={direccion}
           onChange={(e) => setDireccion(e.target.value)}
           placeholder='Dirección'
-          style={{ marginTop: 10 }}
+          style={{ marginBottom: 10 }}
           required
         />
+        <label style={{ fontWeight: 'bold' }}>Barrio</label>
         <Select
-          style={{ width: '100%', marginTop: 10 }}
+          style={{ width: '100%', marginBottom: 10 }}
           placeholder='Selecciona un barrio'
           onChange={(value) => setSelectedBarrio(value)}
           value={selectedBarrio}
@@ -196,21 +209,34 @@ const EditarCliente = ({ cliente }) => {
           ))}
         </Select>
 
+        <label style={{ fontWeight: 'bold' }}>Teléfono</label>
         <Input
           value={telefono}
           onChange={(e) => setTelefono(e.target.value)}
           placeholder='Teléfono'
-          style={{ marginTop: 10 }}
+          style={{ marginBottom: 10 }}
           required
         />
+        <label style={{ fontWeight: 'bold' }}>Observaciones</label>
         <Input
           value={observaciones}
           onChange={(e) => setObservaciones(e.target.value)}
           placeholder='Observaciones'
-          style={{ marginTop: 10 }}
+          style={{ marginBottom: 10 }}
         />
+        <label style={{fontWeight: 'bold'}}>Estado</label>
+        <Select
+          style={{ width: '100%', marginBottom: 10 }}
+          placeholder='Indique estado'
+          onChange={(value) => setEstado(value)}
+          value={estado}
+          required
+        >
+          <Option value='Activo' >Activo</Option>
+          <Option value='Inactivo' >Inactivo</Option>
+        </Select>
 
-        <div style={{ marginTop: 20 }}>
+        <div>
           <h4>Pedidos</h4>
           {pedidos.map((pedido, index) => (
             <div key={index} style={{ display: 'flex', marginBottom: 10 }}>
@@ -249,7 +275,7 @@ const EditarCliente = ({ cliente }) => {
           </Button>
         </div>
 
-        <div style={{ marginTop: 20 }}>
+        <div>
           <h4>Días de Recorrido</h4>
           {diasRecorrido.map((diaRecorrido, index) => (
             <div key={index} style={{ display: 'flex', marginBottom: 10 }}>
