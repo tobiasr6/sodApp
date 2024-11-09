@@ -12,7 +12,10 @@ const apiClientes = {
     eliminarCliente: (id) => `/clientes/${id}`,
 
     //!PUT
-    editarCliente: (id) => `/clientes/${id}`
+    editarCliente: (id) => `/clientes/${id}`,
+
+    //!PATCH
+    modificarEstado: (id) => `/clientes/${id}/estado`
 }
 
 const apiZonas = {
