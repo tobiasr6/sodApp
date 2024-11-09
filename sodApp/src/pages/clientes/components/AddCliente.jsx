@@ -1,15 +1,5 @@
 import { useState, useEffect } from 'react';
-import {
-  Modal,
-  Input,
-  Button,
-  Space,
-  Select,
-  message,
-  Row,
-  Col,
-  Divider
-} from 'antd';
+import {  Modal, Input, Button, Space, Select, message, Row, Col, Divider} from 'antd';
 import useFetchBarrios from '../../../routes/fetchs/fetchBarrios'; // Importación de los barrios
 import useFetchDias from '../../../routes/fetchs/fetchDias';
 import useFetchProductos from '../../../routes/fetchs/fetchProductos';
@@ -27,6 +17,7 @@ const IngresarNombreModal = ({ visible, onClose }) => {
   const [pedidos, setPedidos] = useState([{ cantidad: '', idProducto: null }]);
   const [diasRecorrido, setDiasRecorrido] = useState([{ idDia: null }]);
   const [maxPedidos, setMaxPedidos] = useState(0);
+  const [estado, setEstado] = useState('')
 
   // Hook personalizado para obtener los barrios, días y productos
   const { barrios, loading, error } = useFetchBarrios();
@@ -52,6 +43,7 @@ const IngresarNombreModal = ({ visible, onClose }) => {
       idBarrio: selectedBarrio,
       telefono,
       observaciones,
+      estado,
       pedidos: pedidos.map((pedido) => ({
         cantidad: Number(pedido.cantidad),
         producto: pedido.idProducto
@@ -61,7 +53,7 @@ const IngresarNombreModal = ({ visible, onClose }) => {
       }))
     };
 
-    console.log(clienteData);
+    // console.log(clienteData);
     agregarClienteService(clienteData)
       .then(() => {
         message.success('Cliente agregado correctamente!');
@@ -81,6 +73,7 @@ const IngresarNombreModal = ({ visible, onClose }) => {
     setDireccion('');
     setSelectedBarrio(null);
     setTelefono('');
+    setEstado('Activo')
     setObservaciones('');
     setPedidos([{ cantidad: '', idProducto: null }]);
     setDiasRecorrido([{ idDia: null }]);
@@ -225,6 +218,16 @@ const IngresarNombreModal = ({ visible, onClose }) => {
         placeholder='Observaciones'
         style={{ marginBottom: 10 }} // Aumentar el margen
       />
+
+      <label style={{ fontWeight: 'bold' }}>Estado</label>
+      <Select
+        style={{ width: '100%', marginBottom: 10 }} // Aumentar el margen
+        placeholder='Estado'
+        value={'Activo'}
+      >
+        <Option value='Activo' >Activo</Option>
+        <Option value='Inactivo' >Inactivo</Option>
+      </Select>
 
       <div style={{ marginTop: 20 }}>
         <Divider>Pedidos</Divider>
