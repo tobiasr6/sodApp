@@ -27,10 +27,6 @@ const Usuarios = () => {
       dataIndex: 'fechaNacimiento',
       key: 'fechaNacimiento',
       render: (fecha) => new Date(fecha).toLocaleDateString(), // Formatea la fecha
-    },
-    {
-        title: 'Acciones',
-        key: 'acciones',
     }
   ];
 
