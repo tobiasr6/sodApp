@@ -84,6 +84,16 @@ const FiltrosClientes = ({ filters, handleFilterChange, handleClearFilters }) =>
             </Option>
           ))}
         </Select>
+        <Select
+          placeholder='Filtrar por estado'
+          onChange={(value) => handleFilterChange(value, 'estado')}
+          value={filters.estado || 'Filtrar por estado'}
+          style={{width: 200}}
+        >
+          <Option value=''>Todos</Option>
+          <Option value='Activo'>Activo</Option>
+          <Option value='Inactivo'>Inactivo</Option>
+        </Select>
         <Button onClick={handleClearFilters}>Limpiar Filtros</Button>
       </Space>
       {(errorZonas || errorDias) && (
@@ -101,7 +111,8 @@ FiltrosClientes.propTypes = {
   filters: PropTypes.shape({
     zona: PropTypes.string,
     producto: PropTypes.string,
-    diaRecorrido: PropTypes.string
+    diaRecorrido: PropTypes.string,
+    estado: PropTypes.string
   }).isRequired,
   handleFilterChange: PropTypes.func.isRequired,
   handleClearFilters: PropTypes.func.isRequired,
