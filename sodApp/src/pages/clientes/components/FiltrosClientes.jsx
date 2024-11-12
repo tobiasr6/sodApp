@@ -87,7 +87,7 @@ const FiltrosClientes = ({ filters, handleFilterChange, handleClearFilters }) =>
         <Select
           placeholder='Filtrar por estado'
           onChange={(value) => handleFilterChange(value, 'estado')}
-          value={filters.estado || 'Filtrar por estado'}
+          value={filters.estado || 'Activo'}
           style={{width: 200}}
         >
           <Option value=''>Todos</Option>
