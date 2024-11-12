@@ -30,22 +30,24 @@ const Pedidos = () => {
     });
   };
 
-  // Genera los pedidos en base a los clientes importados
-  const pedidosAplanados = clientes.flatMap(cliente => 
-    cliente.pedidos.map(pedido => ({
-      id: cliente.id, // referencia al cliente
-      nombre: cliente.nombre,
-      direccion: cliente.direccion,
-      telefono: cliente.telefono,
-      observaciones: cliente.observaciones,
-      nombreZona: cliente.nombreZona,
-      idBarrio: cliente.idBarrio,
-      nombreBarrio: cliente.nombreBarrio,
-      cantidad: pedido.cantidad, // cantidad del producto
-      producto: pedido.producto, // tipo de producto
-      diasRecorrido: cliente.diasRecorrido.map(dia => dia.dia).join(', ') // transformamos los días en una cadena
-    }))
-  );
+  // Genera los pedidos en base a los clientes importados, filtrando solo los activos
+  const pedidosAplanados = clientes
+    .filter(cliente => cliente.estado === 'Activo') // Filtrar clientes activos
+    .flatMap(cliente => 
+      cliente.pedidos.map(pedido => ({
+        id: cliente.id, // referencia al cliente
+        nombre: cliente.nombre,
+        direccion: cliente.direccion,
+        telefono: cliente.telefono,
+        observaciones: cliente.observaciones,
+        nombreZona: cliente.nombreZona,
+        idBarrio: cliente.idBarrio,
+        nombreBarrio: cliente.nombreBarrio,
+        cantidad: pedido.cantidad, // cantidad del producto
+        producto: pedido.producto, // tipo de producto
+        diasRecorrido: cliente.diasRecorrido.map(dia => dia.dia).join(', ') // transformamos los días en una cadena
+      }))
+    );
 
   const applyFilters = () => {
     return pedidosAplanados.filter((pedido) => {
