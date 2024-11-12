@@ -1,0 +1,22 @@
+.inactive-row {
+    background-color: #f0f0f0;
+    color: #8c8c8c;
+}
+.inactive-row:hover {
+    background-color: #f0f0f0 !important; /* Mantén el color de fondo fijo */
+    cursor: default; /* Cambia el cursor si deseas */
+}
+
+/* Contenedor para el título y la barra de búsqueda */
+.clientes-header {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+  /* Título "Lista de Clientes" */
+.clientes-header h2 {
+    margin: 0; 
+}
+
+
