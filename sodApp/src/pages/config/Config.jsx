@@ -3,6 +3,7 @@ import { Tabs } from 'antd';
 import Zonas from '../zonas/Zonas'
 import Usuarios from '../usuarios/Usuarios';
 import Barrios from '../barrios/Barrios';
+import Productos from '../productos/Productos';
 
 const onChange = (key) => {
   console.log(key);
@@ -27,14 +28,14 @@ const items = [
   {
     key: '4',
     label: 'Productos',
-    children: 'Content of Tab Pane 4',
+    children: <Productos/>,
   }
 ];
 
 const Config = () => {
   return (
     <div className="config">
-      <h1>Config</h1>
+      {/* <h1>Config</h1> */}
       <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
     </div>
   );
