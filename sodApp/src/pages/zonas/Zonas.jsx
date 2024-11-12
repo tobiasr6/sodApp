@@ -1,68 +1,67 @@
-import { useState, useEffect } from 'react';
-import { Table, Button, Modal, List } from 'antd';
-import zonasData from '../../data/zonas/zonas.json';
+import { useState } from 'react';
+import { Table, Button, Modal, List, Spin, Alert } from 'antd';
+import useFetchZonas from '../../routes/fetchs/fetchZonas';
+import useFetchBarrios from '../../routes/fetchs/fetchBarrios'; // Importa el hook para obtener barrios
 
 const ZonasTable = () => {
-    const [zonas, setZonas] = useState([]);
-    const [visible, setVisible] = useState(false);
-    const [barrios, setBarrios] = useState([]);
-    const [selectedZona, setSelectedZona] = useState('');
+  const [visible, setVisible] = useState(false);
+  const [barriosFiltrados, setBarriosFiltrados] = useState([]);
+  const [selectedZona, setSelectedZona] = useState('');
+  const { zonas, loading: loadingZonas, error: errorZonas } = useFetchZonas();
+  const { barrios, loading: loadingBarrios, error: errorBarrios } = useFetchBarrios();
 
-useEffect(() => {
-// Convertir el objeto zonasData en un array de objetos para la tabla
-const zonasArray = Object.keys(zonasData).map((zona) => ({
-    key: zona,
-    zona: zona,
-    barrios: zonasData[zona],
-}));
-setZonas(zonasArray);
-}, []);
+  const showModal = (idZona, nombreZona) => {
+    setSelectedZona(nombreZona);
 
-const showModal = (zona) => {
-    setSelectedZona(zona);
-    setBarrios(zonasData[zona]);
+    // Filtrar barrios según la zona seleccionada
+    const barriosZona = barrios.filter(barrio => barrio.idZona === idZona);
+    setBarriosFiltrados(barriosZona);
     setVisible(true);
-};
+  };
 
-const handleCancel = () => {
+  const handleCancel = () => {
     setVisible(false);
-};
+  };
 
-const columns = [
+  const columns = [
     {
-    title: 'Zona',
-    dataIndex: 'zona',
-    key: 'zona',
+      title: 'Zona',
+      dataIndex: 'nombreZona',
+      key: 'nombreZona',
     },
     {
-    title: 'Acción',
-    key: 'action',
-    render: (text, record) => (
-        <Button type="primary" onClick={() => showModal(record.zona)}>
-        Ver Barrios
+      title: 'Acción',
+      key: 'action',
+      render: (text, record) => (
+        <Button type="primary" onClick={() => showModal(record.idZona, record.nombreZona)}>
+          Ver Barrios
         </Button>
-    ),
+      ),
     },
-];
+  ];
 
-return (
+  if (loadingZonas || loadingBarrios) return <Spin tip="Cargando zonas y barrios..." />;
+  if (errorZonas || errorBarrios) return <Alert message="Error al cargar zonas o barrios" type="error" />;
+
+  return (
     <>
-        <Table columns={columns} dataSource={zonas} pagination={false} />
+      <h1>Zonas</h1>
+      <Table columns={columns} dataSource={zonas} rowKey="idZona" pagination={{ pageSize: 5 }}  />
 
-        <Modal
-            title={`Barrios en la Zona ${selectedZona}`}
-            visible={visible}
-            onCancel={handleCancel}
-            footer={null}
-        >
+      <Modal
+        title={`Barrios en la Zona ${selectedZona}`}
+        visible={visible}
+        onCancel={handleCancel}
+        footer={null}
+      >
         <List
-            bordered
-            dataSource={barrios}
-            renderItem={(barrio) => <List.Item>{barrio}</List.Item>}
+          bordered
+          dataSource={barriosFiltrados}
+          renderItem={(barrio) => <List.Item>{barrio.nombreBarrio}</List.Item>}
         />
-        </Modal>
+      </Modal>
     </>
-);
+  );
 };
 
 export default ZonasTable;
