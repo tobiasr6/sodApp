@@ -5,21 +5,27 @@ import FiltrosClientes from './components/FiltrosClientes'; // Importa el compon
 // import DeleteCliente from './components/DeleteCliente'; // Importa correctamente el componente DeleteCliente
 import EditarCliente from './components/EditCliente'; // Asegúrate de que el nombre del componente sea correcto
 import ConsultarCliente from './components/ConsultingCliente'; // Asegúrate de que el nombre del componente sea correcto
+import './clientes.css'
+import BusquedaClientes from './components/BusquedaClientes';
 
 const ClientesTable = () => {
   const [clientes, setClientes] = useFetchClientes(); // Asegúrate de actualizar el estado con setClientes
-
+  const [searchTerm, setSearchTerm] = useState(''); 
   const [filters, setFilters] = useState({
     zona: '',
     producto: '',
     diaRecorrido: '',
-    estado: '',
+    estado: 'Activo',
   });
 
   // Función que maneja cuando se elimina un cliente
   // const onClienteEliminado = (id) => {
   //   setClientes((prevClientes) => prevClientes.filter((cliente) => cliente.id !== id));
   // };
+
+  const handleSearch = (term) => {
+    setSearchTerm(term)
+  }
 
   // Manejar cambios en los filtros
   const handleFilterChange = (value, type) => {
@@ -35,7 +41,7 @@ const ClientesTable = () => {
       zona: '',
       producto: '',
       diaRecorrido: '',
-      estado: '',
+      estado: 'Activo',
     });
   };
 
@@ -47,12 +53,13 @@ const ClientesTable = () => {
 
   // Filtrar los clientes en base a los filtros
   const filteredClientes = clientes.filter(cliente => {
+    const matchesNombre = cliente.nombre.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesZona = filters.zona ? cliente.nombreZona === filters.zona : true;
     const matchesProducto = filters.producto ? cliente.pedidos.some(p => p.producto === filters.producto) : true;
     const matchesDia = filters.diaRecorrido ? cliente.diasRecorrido.some(dia => dia.dia === filters.diaRecorrido) : true;
     const matchesEstado = filters.estado ? cliente.estado === filters.estado : true;
 
-    return matchesZona && matchesProducto && matchesDia && matchesEstado;
+    return matchesNombre && matchesZona && matchesProducto && matchesDia && matchesEstado;
   });
 
   // Definir las columnas de la tabla
@@ -141,8 +148,11 @@ const ClientesTable = () => {
 
   return (
     <div>
-      <h2>Lista de Clientes</h2>
-      {/* Componente de Filtros */}
+      <div className="clientes-header">
+        <h2>Lista de clientes</h2>
+        <BusquedaClientes onSearch={handleSearch} className="busqueda-input" />
+      </div>
+
       <FiltrosClientes
         filters={filters}
         handleFilterChange={handleFilterChange}
@@ -155,6 +165,9 @@ const ClientesTable = () => {
         dataSource={filteredClientes}
         rowKey="idCliente"
         pagination={{ pageSize: 5 }}
+        onRow={(record) => ({
+        className: record.estado === 'Inactivo' ? 'inactive-row' : '', // Aplica clase condicional
+        })}
       />
     </div>
   );
