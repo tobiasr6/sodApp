@@ -315,7 +315,7 @@ const Entregas = () => {
         type='primary'
         icon={<PlusOutlined />}
         onClick={showModal}
-        style={{ marginBottom: 16, marginLeft: 16 }}
+        style={{ marginBottom: 10 }}
       >
         Agregar entrega
       </Button>
