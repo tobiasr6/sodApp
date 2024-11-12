@@ -64,11 +64,6 @@ const Barrios = () => {
 
   const columns = [
     {
-      title: 'ID',
-      dataIndex: 'idBarrio',
-      key: 'idBarrio',
-    },
-    {
       title: 'Nombre',
       dataIndex: 'nombreBarrio',
       key: 'nombreBarrio',
